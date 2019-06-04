@@ -1,0 +1,19 @@
+# Generated
+.DS_Store
+.git/
+.gitignore
+*.swp
+*.bak
+*.tmp
+tools
+generated
+.env-file
+images
+.gitignore
+.info_bash_tmp
+init
+info
+meta
+roles
+Jenkinsfile
+# Manually Added Ignores
