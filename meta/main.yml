@@ -1,3 +1,0 @@
-galaxy_info:
-dependencies:
-  - { role: grafana-dashboard-resource }
