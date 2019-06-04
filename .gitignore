@@ -1,0 +1,8 @@
+generated
+.DS_Store
+tools
+roles
+.env-file
+.info_bash_tmp
+target
+images.yaml
