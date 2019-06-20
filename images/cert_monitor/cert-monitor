@@ -10,31 +10,35 @@
 #
 #
 
-kubectl get ingress --all-namespaces --no-headers  -w | 
-    while IFS= read -r line;  do 
-        INPUT_LINE=$(echo $line | tr -s ' ' | tr ' ' ',' | cut -f 1,2 -d , )
-        NAMESPACE=$(echo "${INPUT_LINE}" | cut -f 1 -d,)
-        INGRESS_NAME=$(echo "${INPUT_LINE}" | cut -f 2 -d,)
-        echo "Found ${NAMESPACE}/${INGRESS_NAME}"
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
-        for SECRET in $(kubectl get ingress -o yaml -n ${NAMESPACE} ${INGRESS_NAME} | grep secretName  | cut -f 2 -d :| xargs | sort | uniq); do
-            echo "Checking secret ${SECRET}"
-            kubectl get secret -n ${NAMESPACE} ${SECRET}
-            ret=$?
-            if [ $ret -ne 0 ]; then
-                echo "Secret does not exist"
-                HOST_COUNT=$(kubectl get ingress -o yaml  -n ${NAMESPACE} ${INGRESS_NAME}  | grep host: | wc -l | xargs)
-                if [ "$HOST_COUNT" == "1" ]; then 
-                    echo "Single host found - creation of self signeed cert supported"
-                    HOST_NAME=$(kubectl get ingress -o yaml -n ${NAMESPACE} ${INGRESS_NAME} | grep host: | cut -f 2 -d : | xargs)
-                    echo "Secret does not exist - creating default secret"
-                    rm -f /var/tmp/tls.key /var/tmp/tls.crt
-                    openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /var/tmp/tls.key -out /var/tmp/tls.crt -subj "/C=US/ST=CA/L=SF/O=self-signed.cisco.com/CN=${HOST_NAME}"
-                    kubectl create secret tls ${SECRET} --key /var/tmp/tls.key  --cert /var/tmp/tls.crt -n ${NAMESPACE} 
-                    rm -f /var/tmp/tls.key /var/tmp/tls.crt
-                else 
-                    echo "Multiple host found - creation of self signeed cert is not supported"
+while true; do 
+    kubectl get ingress --all-namespaces --no-headers  -w | 
+        while IFS= read -r line;  do 
+            INPUT_LINE=$(echo $line | tr -s ' ' | tr ' ' ',' | cut -f 1,2 -d , )
+            NAMESPACE=$(echo "${INPUT_LINE}" | cut -f 1 -d,)
+            INGRESS_NAME=$(echo "${INPUT_LINE}" | cut -f 2 -d,)
+            echo "Found ${NAMESPACE}/${INGRESS_NAME}"
+
+            for SECRET in $(kubectl get ingress -o yaml -n ${NAMESPACE} ${INGRESS_NAME} | grep secretName  | cut -f 2 -d :| xargs | sort | uniq); do
+                echo "Checking secret ${SECRET}"
+                kubectl get secret -n ${NAMESPACE} ${SECRET}
+                ret=$?
+                if [ $ret -ne 0 ]; then
+                    echo "Secret does not exist"
+                    HOST_COUNT=$(kubectl get ingress -o yaml  -n ${NAMESPACE} ${INGRESS_NAME}  | grep host: | wc -l | xargs)
+                    if [ "$HOST_COUNT" == "1" ]; then 
+                        echo "Single host found - creation of self signeed cert supported"
+                        HOST_NAME=$(kubectl get ingress -o yaml -n ${NAMESPACE} ${INGRESS_NAME} | grep host: | cut -f 2 -d : | xargs)
+                        echo "Secret does not exist - creating default secret"
+                        rm -f /var/tmp/tls.key /var/tmp/tls.crt
+                        openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /var/tmp/tls.key -out /var/tmp/tls.crt -subj "/C=US/ST=CA/L=SF/O=self-signed.cisco.com/CN=${HOST_NAME}"
+                        kubectl create secret tls ${SECRET} --key /var/tmp/tls.key  --cert /var/tmp/tls.crt -n ${NAMESPACE} 
+                        rm -f /var/tmp/tls.key /var/tmp/tls.crt
+                    else 
+                        echo "Multiple host found - creation of self signeed cert is not supported"
+                    fi
                 fi
-            fi
+            done
         done
-    done
+done 

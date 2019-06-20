@@ -8,5 +8,6 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.2/b
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl
 
+STOPSIGNAL SIGINT
 
 COPY cert-monitor /usr/local/bin
