@@ -1,4 +1,5 @@
-FROM dockerhub.cisco.com/smi-fuse-docker-internal/smi-libraries/releases/ubuntu-base/18.04.9/ubuntu-base:18.04.9
+ARG SMI_FROM_LATEST_MINOR=dockerhub.cisco.com/smi-fuse-docker-internal/smi-libraries/releases/ubuntu-base/18.04.10/ubuntu-base:18.04.10
+FROM ${SMI_FROM_LATEST_MINOR}
 
 RUN apt-get-update && \
     apt-get -y --no-install-recommends install curl ca-certificates git openssh-client && \
