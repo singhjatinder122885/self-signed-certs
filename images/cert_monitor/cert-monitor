@@ -32,7 +32,7 @@ while true; do
                         HOST_NAME=$(kubectl get ingress -o yaml -n ${NAMESPACE} ${INGRESS_NAME} | grep host: | cut -f 2 -d : | xargs)
                         echo "Secret does not exist - creating default secret"
                         rm -f /var/tmp/tls.key /var/tmp/tls.crt
-                        openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /var/tmp/tls.key -out /var/tmp/tls.crt -subj "/C=US/ST=CA/L=SF/O=self-signed.cisco.com/CN=${HOST_NAME}"
+                        openssl req -x509 -nodes -days 825 -newkey rsa:2048 -keyout /var/tmp/tls.key -out /var/tmp/tls.crt -subj "/C=US/ST=CA/L=SF/O=self-signed.cisco.com/CN=${HOST_NAME}"
                         kubectl create secret tls ${SECRET} --key /var/tmp/tls.key  --cert /var/tmp/tls.crt -n ${NAMESPACE} 
                         rm -f /var/tmp/tls.key /var/tmp/tls.crt
                     else 
