@@ -62,3 +62,14 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.global.imagePullSecrets | indent 8 }}
       {{- end }}
+      {{- if eq .Values.global.singleNode false }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: smi.cisco.com/node-type
+                operator: In
+                values:
+                - oam
+      {{- end }}
