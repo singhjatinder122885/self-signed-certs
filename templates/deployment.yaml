@@ -54,7 +54,7 @@ spec:
       - name: cert-monitor
         image: {{.Values.global.registry}}{{ .Values.images.cert_monitor }}
         command:
-          - /usr/local/bin/cert-monitor
+          - /usr/local/bin/cert-monitor.py
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
