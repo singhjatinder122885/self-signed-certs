@@ -2,7 +2,6 @@ ARG SMI_FROM_LATEST_MINOR=dockerhub.cisco.com/smi-fuse-docker-internal/smi-libra
 FROM ${SMI_FROM_LATEST_MINOR}
 
 RUN apt-get-update && \
-    apt-get -y --no-install-recommends install curl ca-certificates git openssh-client && \
     apt-get install -y python3-pip && \
     cd /usr/local/bin && \
     ln -s /usr/bin/python3 python && \
