@@ -2,7 +2,7 @@ ARG SMI_FROM_LATEST_MINOR=dockerhub.cisco.com/smi-fuse-docker-internal/smi-libra
 FROM ${SMI_FROM_LATEST_MINOR}
 
 RUN apt-get-update && \
-    apt-get install -y python3-pip && \
+    apt-get install -y python3-pip jq && \
     cd /usr/local/bin && \
     ln -s /usr/bin/python3 python && \
     pip3 install --upgrade pip && \
