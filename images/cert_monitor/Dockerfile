@@ -1,4 +1,4 @@
-ARG SMI_FROM_LATEST_MINOR=dockerhub.cisco.com/smi-fuse-docker-internal/smi-libraries/releases/ubuntu-base/18.04.22/ubuntu-base:18.04.22
+ARG SMI_FROM_LATEST_MINOR=dockerhub.cisco.com/smi-fuse-docker-internal/smi-libraries/releases/ubuntu-base/18.04.23/ubuntu-base:18.04.23
 FROM ${SMI_FROM_LATEST_MINOR}
 
 RUN apt-get-update && \
