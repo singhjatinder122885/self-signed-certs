@@ -17,3 +17,16 @@ meta
 roles
 Jenkinsfile
 # Manually Added Ignores
+component.properties
+*.md
+*.MD
+Jenkinsfile.smi
+chart-updater
+docs
+global.yaml
+sample.yaml
+samples-*.yaml
+sample-*.yaml
+tests/
+test/
+test*.yaml
