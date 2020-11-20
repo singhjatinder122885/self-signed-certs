@@ -56,6 +56,13 @@ spec:
         command:
           - /usr/local/bin/cert-monitor.py
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        {{ if not $.Values.global.singleNode }}
+        resources:
+          requests:
+            cpu: "10m"
+          limits:
+            cpu: "200m"
+        {{ end }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       {{- if .Values.global.imagePullSecrets }}
